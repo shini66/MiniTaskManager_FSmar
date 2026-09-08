@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import { env } from './config/env.js';
+import routers from './routes/routes.js';
 
 const app = express();
 
@@ -7,6 +9,7 @@ app.use(cors({origin: '*'}));
 app.use(express.json());
 
 app.get("/", (req, res) => res.json({status: "API funcionando ✅"}));
+app.get("/api", routers)
 
 app.use((req, res) => {
     res.status(404).json({ message: "Endpoint not found" });
