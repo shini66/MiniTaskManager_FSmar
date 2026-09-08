@@ -1,0 +1,16 @@
+{
+  "name": "minitaskmanager_fsmar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "workspaces": ["/*"],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:api": "npm run dev --workspace @fullstack/api",
+    "dev:web": "npm run dev --workspace @fullstack/web"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+}
