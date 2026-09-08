@@ -2,8 +2,8 @@ import { registerUser, loginUser } from "../services/auth.service.js";
 
 async function register(req, res) {
     try{
-        const {user, email, password } = req.body;
-        const result = await registerUser({user, email, password})
+        const {name, email, password } = req.body;
+        const result = await registerUser({name, email, password})
         res.status(201).json(result);
     }catch(error){
         res.status(400).json({message: error.message});
@@ -13,8 +13,8 @@ async function register(req, res) {
 
 async function login(req, res) {
     try{
-        const {user, password } = req.body;
-        const result = await loginUser({user, password})
+        const {email, password } = req.body;
+        const result = await loginUser({email, password})
         res.status(200).json(result);
     }catch(error){
         res.status(401).json({message: error.message});

@@ -4,8 +4,8 @@ import { generateToken } from "../utils/generateToken.js";
 async function registerUser(userData) {
     return new Promise(async (resolve, reject) => {
         try {
-            const existingUser = await User.findOne({ $or: [{ user: userData.user }, { email: userData.email }] });
-            if (existingUser) {
+            const existingEmail = await User.findOne({ $or: [{ user: userData.user }, { email: userData.email }] });
+            if (existingEmail) {
                 return reject(new Error('User or email already exists'));
             }
             const user = new User(userData);
@@ -18,20 +18,20 @@ async function registerUser(userData) {
     });
 }
 
-async function loginUser({ user, password }) {
+async function loginUser({ email, password }) {
     return new Promise(async (resolve, reject) => {
         try {
-            const existingUser = await User.findOne({ user });
-            if (!existingUser) {
+            const existingEmail = await User.findOne({ email });
+            if (!existingEmail) {
                 return reject(new Error('Invalid credentials'));
             }
 
-            const isMatch = await existingUser.comparePassword(password);
+            const isMatch = await existingEmail.comparePassword(password);
             if (!isMatch) {
                 return reject(new Error('Invalid credentials'));
             }
 
-            resolve({ user: { id: existingUser._id, user: existingUser.user, email: existingUser.email }, token: generateToken(existingUser) });
+            resolve({ user: { id: existingEmail._id, name: existingEmail.name, email: existingEmail.email }, token: generateToken(existingEmail) });
         } catch (error) {
             reject(error);
         }
