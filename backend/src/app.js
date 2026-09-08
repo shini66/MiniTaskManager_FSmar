@@ -9,7 +9,7 @@ app.use(cors({origin: '*'}));
 app.use(express.json());
 
 app.get("/", (req, res) => res.json({status: "API funcionando ✅"}));
-app.get("/api", routers)
+app.use("/api", routers)
 
 app.use((req, res) => {
     res.status(404).json({ message: "Endpoint not found" });

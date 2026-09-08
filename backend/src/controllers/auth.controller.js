@@ -4,7 +4,7 @@ import { env } from '../config/env.js';
 import { User } from '../models/User.js';
 
 const publicUser = user => ({ id: user.id, name: user.name, email: user.email });
-const signToken = user => jwt.sing({sub: user.id}, env.JWT_SECRET, {
+const signToken = user => jwt.sign({sub: user.id}, env.JWT_SECRET, {
     expiresIn: env.JWT_EXPIRES_IN || '1h'
 });
 
