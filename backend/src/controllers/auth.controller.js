@@ -1,41 +1,37 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { env } from '../config/env.js';
-import { User } from '../models/User.js';
+import { registerUser, loginUser } from "../services/auth.service.js";
 
-const publicUser = user => ({ id: user.id, name: user.name, email: user.email });
-const signToken = user => jwt.sign({sub: user.id}, env.JWT_SECRET, {
-    expiresIn: env.JWT_EXPIRES_IN || '1h'
-});
-
-export async function register(req, res){
-    const {name, email, password } = req.body;
-
-    if (!name?.trim() || !email?.trim() || !password || password.length < 8) {
-        return res.status(422).json({ message: 'Nombre, email y contraseña de 8+ caracteres son obligatorios' });
+async function register(req, res) {
+    try{
+        const {user, email, password } = req.body;
+        const result = await registerUser({user, email, password})
+        res.status(201).json(result);
+    }catch(error){
+        res.status(400).json({message: error.message});
     }
+}
 
-    const normalizedEmail = email.trim().toLowerCase();
-    if (await User.exists({ email: normalizedEmail })) {
-        return res.status(409).json({ message: 'El email ya está registrado' });
+
+async function login(req, res) {
+    try{
+        const {user, password } = req.body;
+        const result = await loginUser({user, password})
+        res.status(200).json(result);
+    }catch(error){
+        res.status(401).json({message: error.message});
     }
-
-    const passwordHash = await bcrypt.hash(password, 12);
-    const user = await User.create({ name: name.trim(), email: normalizedEmail, passwordHash });
-    return res.status(201).json({ user: publicUser(user), token: signToken(user) });
 }
 
-export async function login(req, res){
-    const email = req.body.email?.trim().toLowerCase();
-    const password = req.body.password;
-    if (!email || !password) return res.status(422).json({ message: 'Faltan credenciales' });
-
-    const user = await User.findOne({ email }).select('+passwordHash');
-    const valid = user && await bcrypt.compare(password, user.passwordHash);
-    if (!valid) return res.status(401).json({ message: 'Credenciales inválidas' });
-    return res.json({ user: publicUser(user), token: signToken(user) }); 
+async function getMe(req, res) {
+    try {
+        const user = req.user;
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
 }
 
-export async function listUses(req, res){
-    res.json(await User.find().select('name email createdAt').sort({createdAt: -1}));
+async function logout(req, res) {
+    res.status(200).json({ message: "Logged out successfully" });
 }
+
+export {register, login, getMe, logout};

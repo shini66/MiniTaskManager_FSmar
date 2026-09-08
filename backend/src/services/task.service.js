@@ -1,4 +1,4 @@
-import Task from "../models/Task.js";
+import { Task } from "../models/Task.js";
 
 async function createTask(taskData) {
     return new Promise(async (resolve, reject) => {
