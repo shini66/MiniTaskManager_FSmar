@@ -4,14 +4,14 @@ import { generateToken } from "../utils/generateToken.js";
 async function registerUser(userData) {
     return new Promise(async (resolve, reject) => {
         try {
-            const existingEmail = await User.findOne({ $or: [{ user: userData.user }, { email: userData.email }] });
+            const existingEmail = await User.findOne({ $or: [{ name: userData.name }, { email: userData.email }] });
             if (existingEmail) {
                 return reject(new Error('User or email already exists'));
             }
             const user = new User(userData);
             await user.save();
             const token = generateToken(user);
-            resolve({ user: { id: user._id, user: user.user, email: user.email }, token });
+            resolve({ user: { id: user._id, name: user.name, email: user.email }, token });
         } catch (error) {
             reject(error);
         }
