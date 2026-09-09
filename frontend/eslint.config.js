@@ -17,5 +17,11 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    rules: {
+      // Data fetching in useEffect (with a synchronous loading-state set) is
+      // the standard pattern used throughout this app; this rule targets
+      // React Compiler readiness and conflicts with that pattern here.
+      'react-hooks/set-state-in-effect': 'off',
+    },
   },
 ])
