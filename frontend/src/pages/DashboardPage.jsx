@@ -13,11 +13,10 @@ import { TaskDialog } from '../components/TaskDialog';
 import { DeleteConfirmDialog } from '../components/DeleteConfirmDialog';
 import { useDebouncedValue } from '../hooks/useDebouncedValue';
 
-const PAGE_LIMIT = 10;
-
 export function DashboardPage() {
   const [tasks, setTasks] = useState([]);
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -35,10 +34,10 @@ export function DashboardPage() {
       search: debouncedSearch || undefined,
       status: status === 'all' ? undefined : status,
       page,
-      limit: PAGE_LIMIT,
+      limit: pageSize,
       order,
     }),
-    [debouncedSearch, status, page, order],
+    [debouncedSearch, status, page, pageSize, order],
   );
 
   const fetchTasks = useCallback(async () => {
@@ -74,6 +73,11 @@ export function DashboardPage() {
 
   function handleOrderToggle() {
     setOrder((prev) => (prev === 1 ? -1 : 1));
+  }
+
+  function handlePageSizeChange(event) {
+    setPageSize(Number(event.target.value));
+    setPage(1);
   }
 
   function openCreateDialog() {
@@ -131,6 +135,8 @@ export function DashboardPage() {
       <TaskFilters
         search={search}
         onSearchChange={handleSearchChange}
+        pageSize={pageSize}
+        onPageSizeChange={handlePageSizeChange}
         status={status}
         onStatusChange={handleStatusChange}
         order={order}
@@ -143,6 +149,17 @@ export function DashboardPage() {
           {error}
         </Alert>
       )}
+
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2, my: 4 }}>
+        {totalPages > 1 && (
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={(_, value) => setPage(value)}
+            color="primary"
+          />
+        )}
+      </Box>
 
       {isLoading ? (
         <Stack spacing={1.5}>
@@ -176,16 +193,7 @@ export function DashboardPage() {
         </Stack>
       )}
 
-      {totalPages > 1 && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={(_, value) => setPage(value)}
-            color="primary"
-          />
-        </Box>
-      )}
+      
 
       <TaskDialog
         open={dialogState.open}

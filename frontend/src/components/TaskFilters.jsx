@@ -1,6 +1,10 @@
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Tooltip from '@mui/material/Tooltip';
@@ -11,9 +15,13 @@ import AddIcon from '@mui/icons-material/Add';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
+const PAGE_SIZE_OPTIONS = [5, 10, 15, 20, 25];
+
 export function TaskFilters({
   search,
   onSearchChange,
+  pageSize,
+  onPageSizeChange,
   status,
   onStatusChange,
   order,
@@ -42,6 +50,23 @@ export function TaskFilters({
           },
         }}
       />
+
+      <FormControl size="small" sx={{ minWidth: 150 }}>
+        <InputLabel id="page-size-label">Items per page</InputLabel>
+        <Select
+          labelId="page-size-label"
+          id="page-size"
+          value={pageSize}
+          label="Items per page"
+          onChange={onPageSizeChange}
+        >
+          {PAGE_SIZE_OPTIONS.map((option) => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
       <ToggleButtonGroup
         value={status}
