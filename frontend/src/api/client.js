@@ -22,7 +22,8 @@ export function setStoredAuth(auth) {
 export const AUTH_STORAGE_EVENT = 'miniTaskManager:auth-expired';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://127.0.0.1:3050',
+  headers: {'Content-Type': 'application/json'}
 });
 
 apiClient.interceptors.request.use((config) => {

@@ -5,7 +5,7 @@ import routers from './routes/routes.js';
 
 const app = express();
 
-app.use(cors({origin: '*'}));
+app.use(cors({origin: env.CLIENT_ORIGIN}));
 app.use(express.json());
 
 app.get("/", (req, res) => res.json({status: "API funcionando ✅"}));
